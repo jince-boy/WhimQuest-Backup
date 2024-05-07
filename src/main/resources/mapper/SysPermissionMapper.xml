@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.whim.mapper.SysPermissionMapper">
+
+    <resultMap type="com.whim.model.entity.SysPermission" id="SysPermissionMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="parentId" column="parent_id" jdbcType="INTEGER"/>
+        <result property="type" column="type" jdbcType="VARCHAR"/>
+        <result property="path" column="path" jdbcType="VARCHAR"/>
+        <result property="component" column="component" jdbcType="VARCHAR"/>
+        <result property="sort" column="sort" jdbcType="INTEGER"/>
+        <result property="permissionCode" column="permission_code" jdbcType="VARCHAR"/>
+        <result property="visible" column="visible" jdbcType="VARCHAR"/>
+        <result property="redirectPath" column="redirect_path" jdbcType="VARCHAR"/>
+        <result property="icon" column="icon" jdbcType="VARCHAR"/>
+        <result property="remark" column="remark" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <!--通过用户id获取权限列表-->
+    <select id="getPermissionByUserId" resultType="java.lang.String"
+            parameterType="java.lang.Long">
+        select sp.permission_code
+        from sys_permission as sp
+                 left join sys_role_permission as srp on sp.id = srp.permission_id
+                 left join sys_role as sr on srp.role_id = sr.id
+                 left join sys_user_role as sur on sr.id = sur.role_id
+        where sur.user_id = #{userId}
+    </select>
+    <select id="getMenuByUserId" resultType="com.whim.model.vo.admin.user.SysPermissionVO"
+            parameterType="java.lang.Long">
+        select sp.id,
+               sp.name,
+               sp.parent_id,
+               sp.type,
+               sp.path,
+               sp.component,
+               sp.sort,
+               sp.permission_code,
+               sp.visible,
+               sp.redirect_path,
+               sp.icon,
+               sp.remark,
+               sp.create_time,
+               sp.update_time
+        from sys_permission as sp
+                 left join sys_role_permission as srp on sp.id = srp.permission_id
+                 left join sys_role as sr on srp.role_id = sr.id
+                 left join sys_user_role as sur on sr.id = sur.role_id
+        where sur.user_id = #{userId}
+    </select>
+    <!-- 通过权限id删除角色权限中间表-->
+    <delete id="deleteRolePermissionByPermissionId">
+        delete
+        from sys_role_permission
+        where permission_id = #{permissionId}
+    </delete>
+
+</mapper>
+
