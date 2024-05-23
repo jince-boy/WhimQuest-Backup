@@ -21,7 +21,7 @@ public class RequestFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
-        log.info("当前IP地址为:[ " + IpUtils.getIpAddress((HttpServletRequest) servletRequest) + " ]的设备请求了路由:{ " + request.getRequestURI() + " }");
+        log.info("当前IP地址为:[ {} ]的设备请求了路由:{ {} }", IpUtils.getIpAddress((HttpServletRequest) servletRequest), request.getRequestURI());
         filterChain.doFilter(servletRequest, servletResponse);
     }
 }
